@@ -1,7 +1,7 @@
 ---
 title: "WUP_04"
-author: "Put your name here!"
-date: "fall 2023"
+author: "Joseph Diaz"
+date: "fall 2025"
 output:
   html_document:
     df_print: paged
@@ -11,8 +11,14 @@ output:
 require(knitr)
 require(tidyverse)
 require(tigerstats)
-
+GSScsv.csv <- read.csv("GSScsv.csv")
+install.packages("mosaic")
+library(mosaic)
 ```
+
+
+
+
 
 # Introduction
 
@@ -26,6 +32,8 @@ $H_a$ There is a significant difference in average score on the WORDSUM test bet
 
 <!--Mention that you intend to use chatGPT to the greatest extent possible. Give credit to chatGPT when you use it to create code in your report. Decide on your methods:  use "variable analysis" or other appropriate descriptors.  Make sure to choose at least one graphical method and at least one numerical method.!-->
 
+This data is numerical categorical and i will be using the helper file to help me solve this assignment.
+
 # Results
 
 <!--Divide this section into two sub-sections:  One for your descriptive  results and one for your inferential results.!-->
@@ -36,15 +44,41 @@ $H_a$ There is a significant difference in average score on the WORDSUM test bet
 
 <!--Graphical results here.  Make sure to show your code.  Provide appropriate labels for axes, giving units if possible, and provide a good title for the graph, too.  Use the graphical results to describe the patterns if any that exist in the data as focused toward the research question!-->
 
+```{r}
+basicCN <- ggplot(GSScsv.csv,aes(x=WORDSUM,y=DEGREE))
+```
+```{r}
+basicCN + geom_boxplot()
+```
+
+
 ### Numerical Descriptive Results
 
 <!--Numerical results go here. Use the numerical results to describe the patterns if any that exist in the data as focused toward the research question!-->
 
+```{r}
+favstats(WORDSUM~DEGREE,data=GSScsv.csv)
+```
+Looking at the favstats,i noticed that the Q1 of graduate school is higher than that of the Q3 of both the high school and LT high school,suggesting there will be a statistical difference between them.
 ## Inferential Results
+
+```{r}
+model1 <- aov(WORDSUM~DEGREE,data=GSScsv.csv)
+summary.aov(model1)
+```
+When i observed the inferential results,I found that the P value is 0.000236,which tells me there is a significant difference in at least two categories.
+
+```{r}
+par(mar=c(3,17,2,2))
+plot(TukeyHSD(model1,conf.level = 0.98),las=2,)
+```
+
 
 <!--State hypothesis clearly.  Make sure your discussion of the inferential test covers all the aspects that the test output produces, such as test statistic, p-value etc.  Make a decision about the null hypothesis, explain the assumptions on which the selected test/procedure was based, and why the chosen procedure satisfys the assumptions and is appropriate to answer the research question!-->
 
+after plotting the 98% confidence level,i noticed that the only confident intervals that zero does not pass through are LT high school-graduate and high school-graduate.This suggests that they are significantly different.
 
 # Discussion and Conclusion
 
 <!--Discussion and conclusion here.  If you found a relationship be sure to consider whether the relationship occurs because one of the variavbles causes the other, or whether they perhasps are related for some other reason.  Watch the chapter 6 videos from the GeorgeTown videos collection.!-->
+for this assignment,  I learned how to analyze numerical categorical data but with more than 2 categories.in fact, i was able to analyze five different categories.This data was comparing DEGREE to WORDSUM. i was able to plot graphical,Numerical and inferential results.
